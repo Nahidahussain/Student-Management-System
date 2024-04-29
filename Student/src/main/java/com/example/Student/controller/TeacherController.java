@@ -70,9 +70,12 @@ public class TeacherController {
     }
 
     @PutMapping("/updateBy/{id}")
-    public ResponseEntity<TeacherResponseDto> updateTeacherDetailsById(@RequestBody TeacherRequestDto teacherRequestDto, @PathVariable("id") Long _id){
+    public ResponseEntity<TeacherResponseDto> updateTeacherDetailsById( @PathVariable("id") Long teacher_id,
+                                                                        @RequestParam(value = "name",required = false) String name,
+                                                                        @RequestParam(value = "teacherId",required = false) String teacherId,
+                                                                        @RequestParam(value = "className",required = false) String className){
         try {
-            TeacherResponseDto teacherResponseDto = teacherService.updateTeacherDetailsById(teacherRequestDto,_id);
+            TeacherResponseDto teacherResponseDto = teacherService.updateTeacherDetailsById(teacher_id,name,teacherId,className);
             return new ResponseEntity<>(teacherResponseDto,HttpStatus.OK);
         } catch (Exception e){
             e.getMessage();

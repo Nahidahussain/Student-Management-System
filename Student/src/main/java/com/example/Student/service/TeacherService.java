@@ -17,5 +17,5 @@ public interface TeacherService {
 
     TeacherResponseDto updateTeacherById(TeacherRequestDto teacherRequestDto,Long id);
 
-    TeacherResponseDto updateTeacherDetailsById(TeacherRequestDto teacherRequestDto,Long id);
+    TeacherResponseDto updateTeacherDetailsById(Long id,String name,String teacherId,String className);
 }

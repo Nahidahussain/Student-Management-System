@@ -22,4 +22,8 @@ public class Teacher {
     String className;
     int classTeaches;
 
+    @OneToOne
+    @JoinColumn(name="stdId") //for custmisation name of the id
+    Student student;
+
 }

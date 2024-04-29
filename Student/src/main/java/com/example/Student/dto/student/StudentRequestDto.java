@@ -14,4 +14,5 @@ public class StudentRequestDto {
     String roll_no;
     int class_name;
 
+    Long teacherId;
 }

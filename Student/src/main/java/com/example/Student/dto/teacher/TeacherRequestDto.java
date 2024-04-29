@@ -15,4 +15,5 @@ public class TeacherRequestDto {
     String teacherId;
     String className;
     int classTeaches;
+    Long studentId;
 }

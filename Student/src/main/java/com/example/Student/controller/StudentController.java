@@ -83,4 +83,15 @@ public class StudentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+
+    @GetMapping("/getTeacherByStudent/{id}")
+    public ResponseEntity<StudentResponseDto> getTeacherByStudentId(@PathVariable("id") Long studentId){
+
+        try{
+            StudentResponseDto studentResponseDto = studentService.getTeacherByStudentId(studentId);
+            return new ResponseEntity<>(studentResponseDto,HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

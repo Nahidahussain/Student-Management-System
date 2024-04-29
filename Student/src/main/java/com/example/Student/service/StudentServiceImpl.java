@@ -2,9 +2,13 @@ package com.example.Student.service;
 
 import com.example.Student.dto.student.StudentRequestDto;
 import com.example.Student.dto.student.StudentResponseDto;
+import com.example.Student.dto.teacher.TeacherResponseDto;
 import com.example.Student.model.Student;
+import com.example.Student.model.Teacher;
 import com.example.Student.repository.StudentRepository;
+import com.example.Student.repository.TeacherRepository;
 import com.example.Student.transformer.StudentTransformer;
+import com.example.Student.transformer.TeacherTransformer;
 import com.example.Student.utils.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,8 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     StudentRepository studentRepository;
 
+    @Autowired
+    TeacherRepository teacherRepository;
 
     public StudentResponseDto addStudent(StudentRequestDto studentRequestDto){
 
@@ -93,4 +99,28 @@ public class StudentServiceImpl implements StudentService{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
         }
     }
+
+    /**
+     * @param
+     * @return
+     */
+    @Override
+    public StudentResponseDto getTeacherByStudentId(Long studentId) {
+
+        Student student = studentRepository.findById(studentId).orElseThrow(()->new RuntimeException("Student not found"));
+//        teacherRepository.findAll().stream().filter(teacher -> teacher.getStudent().getId() == studentId).collect(Collectors.toList());
+
+        List<Teacher> teachers = teacherRepository.findAll();
+        StudentResponseDto studentResponseDto = StudentTransformer.studentToStudentResponseDto(student);
+        for (Teacher teacher:teachers) {
+            if(teacher.getStudent().getId() == studentId){
+                TeacherResponseDto teacherResponseDto = TeacherTransformer.teacherToTeacherResponseDto(teacher);
+                studentResponseDto.setTeacherResponseDto(teacherResponseDto);
+                break;
+            }
+        }
+
+        return studentResponseDto;
+    }
+
 }

@@ -1,9 +1,14 @@
 package com.example.Student.service;
 
+import com.example.Student.dto.student.StudentResponseDto;
 import com.example.Student.dto.teacher.TeacherRequestDto;
 import com.example.Student.dto.teacher.TeacherResponseDto;
+import com.example.Student.model.Student;
 import com.example.Student.model.Teacher;
+import com.example.Student.repository.StudentRepository;
 import com.example.Student.repository.TeacherRepository;
+import com.example.Student.transformer.StudentMarkTransformer;
+import com.example.Student.transformer.StudentTransformer;
 import com.example.Student.transformer.TeacherTransformer;
 import com.example.Student.utils.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +25,24 @@ public class TeacherServiceImpl implements TeacherService{
     @Autowired
     TeacherRepository teacherRepository;
 
+    @Autowired
+    StudentRepository studentRepository;
+
     public TeacherResponseDto addTeacher(TeacherRequestDto teacherRequestDto) {
 
+        //checking if student exist or not
+        Student student = studentRepository.findById(teacherRequestDto.getStudentId()).orElseThrow(()-> new RuntimeException("Student not found"));
+
         Teacher teacher = TeacherTransformer.teacherRequestDtoToTeacher(teacherRequestDto);
+        teacher.setStudent(student);
         Teacher savedTeacher = teacherRepository.save(teacher);
-        return TeacherTransformer.teacherToTeacherResponseDto(savedTeacher);
+
+        StudentResponseDto studentResponseDto = StudentTransformer.studentToStudentResponseDto(student);
+
+        TeacherResponseDto teacherResponseDto = TeacherTransformer.teacherToTeacherResponseDto(savedTeacher);
+        teacherResponseDto.setStudentResponseDto(studentResponseDto);
+
+        return teacherResponseDto;
     }
 
     public List<TeacherResponseDto> getAllTeacher() {
@@ -62,22 +80,41 @@ public class TeacherServiceImpl implements TeacherService{
         return TeacherTransformer.teacherToTeacherResponseDto(teacherSaved);
     }
 
-    public TeacherResponseDto updateTeacherDetailsById(TeacherRequestDto teacherRequestDto, Long id) {
+    public TeacherResponseDto updateTeacherDetailsById(Long id,String name,String teacherId,String className) {
         Teacher teacher = teacherRepository.findById(id).orElseThrow(()->new RuntimeException("Teacher not found"));
-        if(teacherRequestDto.getName() != null){
-            teacher.setName(teacherRequestDto.getName());
-        }
-        if(teacherRequestDto.getClassName() != null) {
-            teacher.setClassName(teacherRequestDto.getClassName());
-        }
-        if(teacherRequestDto.getClassTeaches() != 0) {
-            teacher.setClassTeaches(teacherRequestDto.getClassTeaches());
-        }
-        if(teacherRequestDto.getTeacherId() != null) {
-            teacher.setTeacherId(teacherRequestDto.getTeacherId());
-        }
-        Teacher teacherSaved = teacherRepository.save(teacher);
 
-        return TeacherTransformer.teacherToTeacherResponseDto(teacherSaved);
+        if(name != null){
+            teacher.setName(name);
+        }
+        if(teacherId != null){
+            teacher.setTeacherId(teacherId);
+        }
+        if(className != null){
+            teacher.setClassName(className);
+        }
+
+        Teacher savedTeacher = teacherRepository.save(teacher);
+
+         return  TeacherTransformer.teacherToTeacherResponseDto(savedTeacher);
+
+
+
+
+//        if(teacherRequestDto.getName() != null){
+//            teacher.setName(teacherRequestDto.getName());
+//        }
+//        if(teacherRequestDto.getClassName() != null) {
+//            teacher.setClassName(teacherRequestDto.getClassName());
+//        }
+//        if(teacherRequestDto.getClassTeaches() != 0) {
+//            teacher.setClassTeaches(teacherRequestDto.getClassTeaches());
+//        }
+//        if(teacherRequestDto.getTeacherId() != null) {
+//            teacher.setTeacherId(teacherRequestDto.getTeacherId());
+//        }
+//        Teacher teacherSaved = teacherRepository.save(teacher);
+//
+//        return TeacherTransformer.teacherToTeacherResponseDto(teacherSaved);
     }
+
 }

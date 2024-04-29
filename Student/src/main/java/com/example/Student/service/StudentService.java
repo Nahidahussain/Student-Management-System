@@ -19,4 +19,6 @@ public interface StudentService {
     StudentResponseDto updateStudentById(StudentRequestDto studentRequestDto,Long id);
 
     List<StudentResponseDto> getStudentByFirstName(String firstName);
+
+    StudentResponseDto getTeacherByStudentId(Long studentId);
 }

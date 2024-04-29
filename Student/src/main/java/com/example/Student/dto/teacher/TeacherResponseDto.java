@@ -1,5 +1,6 @@
 package com.example.Student.dto.teacher;
 
+import com.example.Student.dto.student.StudentResponseDto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,4 +16,6 @@ public class TeacherResponseDto {
     String teacherId;
     String className;
     int classTeaches;
+
+    StudentResponseDto studentResponseDto;
 }
